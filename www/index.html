@@ -58,11 +58,13 @@
         <ion-content class="padding">
           <ion-list show-delete="data.showDelete" show-reorder="data.showReorder">
             <ion-item ng-repeat="item in list track by $index" ng-hide="onHideItem(item)" class="item-remove-animate">
-              Item {{ item.titulo }}
+              {{ item.titulo }}
+
               <ion-delete-button class="ion-minus-circled"
                                  ng-click="onItemDelete(item)">
               </ion-delete-button>
-              <ion-option-button class="checkbox checkbox-assertive checkbox-dark pull-right" ng-click="onClickTask(item)">
+              <ion-option-button ng-click="go('/tab/editar/' + $index)" class="ion-edit"></ion-option-button>
+              <ion-option-button class="checkbox checkbox-assertive checkbox-dark pull-right" ng-click="onClickCheck(item)">
                   <input type="checkbox" ng-checked="item.finished">
                   <div class="track">
                     <div class="handle"></div>
@@ -140,7 +142,7 @@
               <textarea placeholder="Descrição" ng-model="item.descricao" class="textarea-default"></textarea>
             </label>
             <label>
-              <button class="button button-positive button-full" ng-click="onItemEdit(item)">Submit</button>
+              <button class="button button-positive button-full" ng-click="onItemEdit(item)">Editar</button>
             </label>
           </div>
         </ion-content>

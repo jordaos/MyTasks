@@ -1,5 +1,5 @@
 function getTasks(){
-  this.items = angular.fromJson(localStorage.getItem('taskList'));
+  this.items = angular.fromJson(localStorage.getItem('taskList')) || [];
 
 
   this.save = function () {

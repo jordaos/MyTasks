@@ -23,6 +23,10 @@ app.run(function($ionicPlatform) {
   });
 });
 
+app.factory('TaskModel', function() {
+  return new getTasks();
+});
+
 app.config(function($stateProvider, $urlRouterProvider) {
 
   $stateProvider
@@ -36,7 +40,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'home-tab': {
           templateUrl: "templates/home.html",
-          controller: 'ListaTarefasCtrl'
+          controller: 'HomeCtrl'
         }
       }
     })
@@ -45,7 +49,16 @@ app.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'home-tab': {
           templateUrl: "templates/adicionar.html",
-          controller: 'ListaTarefasCtrl'
+          controller: 'AddTarefaCtrl'
+        }
+      }
+    })
+    .state('tabs.editar', {
+      url: "/editar/:taskIndex",
+      views: {
+        'home-tab': {
+          templateUrl: "templates/editar.html",
+          controller: "EditarTarefaCtrl"
         }
       }
     })
@@ -95,24 +108,16 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
 });
 
-app.controller('ListaTarefasCtrl', function($scope, $location){
-  var tasks = new getTasks();
+app.controller('HomeCtrl', function ($scope, $location, TaskModel) {
+  var tasks = TaskModel;
 
-  $scope.showFinished = false;
   $scope.list = tasks.items;
 
-  $scope.onClickTask = function (item) {
+  $scope.showFinished = true;
+
+  $scope.onClickCheck = function (item) {
     item.finished = !(item.finished);
     tasks.save();
-  };
-
-  $scope.onItemAdd = function (item) {
-    if(item.titulo !== '') {
-      tasks.add(angular.copy(item));
-      tasks.save();
-      item.titulo = '';
-      item.descricao = '';
-    }
   };
 
   $scope.onHideItem = function (item) {
@@ -138,5 +143,32 @@ app.controller('ListaTarefasCtrl', function($scope, $location){
   $scope.moveItem = function(item, fromIndex, toIndex) {
     $scope.list.splice(fromIndex, 1);
     $scope.list.splice(toIndex, 0, item);
+    tasks.save();
   };
+});
+
+app.controller('AddTarefaCtrl', function($scope, TaskModel, $location){
+  var tasks = TaskModel;
+
+  $scope.onItemAdd = function (item) {
+    tasks.add(angular.copy(item));
+    tasks.save();
+    item.titulo = '';
+    item.descricao = '';
+    $location.path('/tab/home');
+  };
+});
+
+app.controller('EditarTarefaCtrl', function($scope, TaskModel, $stateParams, $location){
+  var tasks = TaskModel;
+
+  var list = tasks.items;
+  var index = $stateParams.taskIndex;
+  $scope.item = list[index];
+
+  $scope.onItemEdit = function (item) {
+    $scope.item = item;
+    tasks.save();
+    $location.path('/tab/home');
+  }
 });

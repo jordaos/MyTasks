@@ -5,6 +5,9 @@
 .pull-right{
   float: right!important;
 }
+.full{
+  width: 100%!important;
+}
 
 /*
  * Form page (adicionar.html)

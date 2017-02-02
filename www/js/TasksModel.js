@@ -1,6 +1,18 @@
 function getTasks(){
-  this.items = [
-    {titulo: 't1', descricao: 'd1', finished: true},
-    {titulo: 't2', descricao: 'd2', finished: false}
-  ];
+  this.items = angular.fromJson(localStorage.getItem('taskList'));
+
+
+  this.save = function () {
+    var lista = angular.toJson(this.items);
+    localStorage.setItem('taskList', lista);
+  }
+
+  this.add = function (item) {
+    this.items.push(item);
+  }
+
+  this.remove = function (item){
+    var pos = this.items.indexOf(item);
+    this.items.splice(pos, 1);
+  };
 }

@@ -16,6 +16,10 @@
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 
+    <!-- Floating Menu -->
+    <link href="lib/ion-floating-menu/dist/ion-floating-menu.css" rel="stylesheet" type="text/css">
+    <script src="lib/ion-floating-menu/dist/ion-floating-menu.js" type="text/javascript"></script>
+
     <!-- Model to Tasks -->
     <script src="js/TasksModel.js"></script>
 
@@ -52,44 +56,93 @@
     <script id="templates/home.html" type="text/ng-template">
       <ion-view view-title="Home">
         <ion-content class="padding">
+          <ion-list show-delete="data.showDelete" show-reorder="data.showReorder">
+            <ion-item ng-repeat="item in list track by $index" ng-hide="onHideItem(item)" class="item-remove-animate">
+              Item {{ item.titulo }}
+              <ion-delete-button class="ion-minus-circled"
+                                 ng-click="onItemDelete(item)">
+              </ion-delete-button>
+              <ion-option-button class="checkbox checkbox-assertive checkbox-dark pull-right" ng-click="onClickTask(item)">
+                  <input type="checkbox" ng-checked="item.finished">
+                  <div class="track">
+                    <div class="handle"></div>
+                  </div>
+              </ion-option-button>
+              <ion-reorder-button class="ion-navicon" on-reorder="moveItem(item, $fromIndex, $toIndex)"></ion-reorder-button>
+            </ion-item>
+
+          </ion-list>
+
+        </ion-content>
+        <ion-footer-bar class="bar-dark">
           <div class="row">
-            <div class="col">
-              <a class="button icon icon-right ion-chevron-right" href="#/tab/adicionar">Adicionar</a>
-            </div>
-          </div>
-          <ul class="list">
-            <li class="item item-checkbox" ng-repeat="item in list track by $index">
-              {{item.titulo}}
-              <label class="checkbox checkbox-assertive checkbox-dark" ng-click="onClickTask(item)">
-                <input type="checkbox" ng-checked="item.finished">
+            <label class="full">
+              Exibir tarefas concluidas
+              <label class="toggle toggle-stable toggle-small pull-right">
+                <input type="checkbox" ng-model="showFinished">
                 <div class="track">
                   <div class="handle"></div>
                 </div>
               </label>
-            </li>
+            </label>
+          </div>
+          <ion-floating-menu has-footer="true"
+                             menu-open-color="#dc3434"
+                             menu-color="#387ef5"
+                             menu-icon="ion-grid"
+                             menu-open-icon="ion-close-round">
+            <ion-floating-item icon="ion-minus-circled"
+                               text="Deletar tarefa"
+                               button-color="#387ef5"
+                               ng-click="data.showDelete = !data.showDelete; data.showReorder = false"></ion-floating-item>
+            <ion-floating-item icon="ion-ios-list-outline"
+                               text="Reorganizar tarefas"
+                               button-color="#387ef5"
+                               ng-click="data.showDelete = false; data.showReorder = !data.showReorder"></ion-floating-item>
+            <ion-floating-item icon="ion-plus-round"
+                               text="Adicionar tarefa"
+                               button-color="#387ef5"
+                               ng-click="go('/tab/adicionar')"></ion-floating-item>
+          </ion-floating-menu>
+        </ion-footer-bar>
 
-          </ul>
-        </ion-content>
       </ion-view>
     </script>
 
     <script id="templates/adicionar.html" type="text/ng-template">
       <ion-view view-title="Adicionar nova tarefa">
         <ion-content class="padding">
+          <form name="itemForm">
+            <div class="list">
+              <label class="item item-input">
+                <input type="text" placeholder="Titulo" ng-model="item.titulo" ng-required="true">
+              </label>
+              <label class="item item-input">
+                <textarea placeholder="Descrição" ng-model="item.descricao" ng-required="true" class="textarea-default"></textarea>
+              </label>
+              <label>
+                <button class="button button-positive button-full" ng-click="onItemAdd(item)" ng-disabled="itemForm.$invalid">Submit</button>
+              </label>
+            </div>
+          </form>
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script id="templates/editar.html" type="text/ng-template">
+      <ion-view view-title="Editar tarefa">
+        <ion-content class="padding">
           <div class="list">
             <label class="item item-input">
-              <input type="text" placeholder="Titulo" ng-model="task.titulo">
+              <input type="text" placeholder="Titulo" ng-model="item.titulo">
             </label>
             <label class="item item-input">
-              <textarea placeholder="Descrição" ng-model="task.descricao" class="textarea-default"></textarea>
+              <textarea placeholder="Descrição" ng-model="item.descricao" class="textarea-default"></textarea>
             </label>
             <label>
-              <button class="button button-positive button-full" ng-click="adicionarTarefa(task)">Submit</button>
+              <button class="button button-positive button-full" ng-click="onItemEdit(item)">Submit</button>
             </label>
           </div>
-          <p ng-repeat="item in list track by $index">
-            {{item}}
-          </p>
         </ion-content>
       </ion-view>
     </script>

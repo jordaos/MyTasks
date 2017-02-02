@@ -1,6 +1,5 @@
-function getTasks(){
+app.service('Tasks', function() {
   this.items = angular.fromJson(localStorage.getItem('taskList')) || [];
-
 
   this.save = function () {
     var lista = angular.toJson(this.items);
@@ -15,4 +14,4 @@ function getTasks(){
     var pos = this.items.indexOf(item);
     this.items.splice(pos, 1);
   };
-}
+});

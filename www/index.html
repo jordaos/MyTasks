@@ -20,11 +20,13 @@
     <link href="lib/ion-floating-menu/dist/ion-floating-menu.css" rel="stylesheet" type="text/css">
     <script src="lib/ion-floating-menu/dist/ion-floating-menu.js" type="text/javascript"></script>
 
-    <!-- Model to Tasks -->
-    <script src="js/TasksModel.js"></script>
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
+
+    <!-- Model to Tasks -->
+    <script src="js/service/Tasks.js"></script>
+    <script src="js/controller/TasksCtrl.js"></script>
   </head>
   <body ng-app="starter">
   	<ion-nav-bar class="bar-positive">
@@ -63,7 +65,7 @@
               <ion-delete-button class="ion-minus-circled"
                                  ng-click="onItemDelete(item)">
               </ion-delete-button>
-              <ion-option-button ng-click="go('/tab/editar/' + $index)" class="ion-edit"></ion-option-button>
+              <ion-option-button ng-click="go('/tab/editar/' + $index)" class="ion-edit button-dark"></ion-option-button>
               <ion-option-button class="checkbox checkbox-assertive checkbox-dark pull-right" ng-click="onClickCheck(item)">
                   <input type="checkbox" ng-checked="item.finished">
                   <div class="track">
